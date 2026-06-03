@@ -13,7 +13,11 @@ export function RemoveButton({ movieId }: { movieId: string }) {
       size="sm"
       className="w-full"
       disabled={isPending}
-      onClick={() => startTransition(() => removeFromWatchlist(movieId))}
+      onClick={() =>
+        startTransition(() => {
+          removeFromWatchlist(movieId);
+        })
+      }
     >
       {isPending ? "removing..." : "remove"}
     </Button>
