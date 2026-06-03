@@ -1,0 +1,39 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Movie {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  overview    String
+  posterUrl   String?
+  releaseDate DateTime?
+  genre       String
+  voteAverage Float    @default(0)
+  cast        Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  watchlistItems WatchlistItem[]
+
+  @@index([genre])
+}
+
+model WatchlistItem {
+  id        String   @id @default(cuid())
+  movieId   String
+  userId    String
+  createdAt DateTime @default(now())
+
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([movieId, userId])
+  @@index([userId])
+}
